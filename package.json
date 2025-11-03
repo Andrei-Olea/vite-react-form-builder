@@ -1,0 +1,27 @@
+{
+  "name": "codecol-vinculacion-ahorro-2025",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Codecol - Savings Program Enrollment 2025",
+  "packageManager": "pnpm@10.18.3",
+  "scripts": {
+    "dev": "vite",
+    "dev:smart": "bash dev.sh",
+    "build": "tsc && vite build && pnpm run postbuild",
+    "postbuild": "find dist/ -type l -delete 2>/dev/null || true && ln -sf dist/assets assets 2>/dev/null || true && ln -sf dist/fonts fonts 2>/dev/null || true && ln -sf dist/img img 2>/dev/null || true && echo '✓ Symlinks created for DDEV access'",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "deploy": "bash deploy.sh"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3"
+  }
+}

@@ -1,0 +1,33 @@
+# ========================================
+# SECURITY: Block access to sensitive files
+# ========================================
+
+# Block .env files (CRITICAL - contains credentials!)
+<FilesMatch "^\.env">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent direct access to config.php
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Prevent direct access to log files
+<Files "*.log">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Block composer files
+<FilesMatch "^composer\.(json|lock)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Allow PHP files to be accessed
+<FilesMatch "\.(php)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
