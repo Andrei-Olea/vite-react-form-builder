@@ -21,9 +21,12 @@ Modern web application for Codecol's savings program enrollment, built with Reac
 .
 ├── src/                          # Source code
 │   ├── components/               # React components
-│   │   └── SavingsForm.tsx      # Main form component
+│   │   ├── form/                # Form scaffolding components
+│   │   └── SavingsForm.tsx      # Main production form
+│   ├── examples/                 # Example forms
 │   ├── hooks/                    # Custom React hooks
-│   │   └── useSavingsForm.ts    # Form logic hook
+│   │   ├── useSavingsForm.ts    # Form logic hook
+│   │   └── useFormSubmission.ts # Generic submission hook
 │   ├── styles/                   # CSS styles
 │   │   └── main.css             # Main stylesheet
 │   ├── types/                    # TypeScript definitions
@@ -42,6 +45,13 @@ Modern web application for Codecol's savings program enrollment, built with Reac
 │   ├── config.example.php       # Configuration template
 │   └── .htaccess                # Apache config
 │
+├── docs/                         # Documentation
+│   ├── FORM_SCAFFOLDING_GUIDE.md
+│   ├── GOOGLE_SHEETS_INTEGRATION.md
+│   ├── ENV_GUIDE.md
+│   ├── QUICKSTART.md
+│   └── DEPLOYMENT_SECURITY.md
+│
 ├── public/                       # Static assets
 │   ├── img/                     # Images
 │   ├── fonts/                   # Web fonts
@@ -55,7 +65,9 @@ Modern web application for Codecol's savings program enrollment, built with Reac
 ├── tsconfig.json                # TypeScript configuration
 ├── package.json                 # Node dependencies
 ├── composer.json                # PHP dependencies
-└── deploy.sh                    # Deployment script
+├── deploy.sh                    # Deployment script
+├── README.md                    # Project documentation
+└── CLAUDE.md                    # Claude Code instructions
 ```
 
 ## Development
@@ -328,6 +340,16 @@ Then rebuild: `pnpm run build`
 ```bash
 tail -f api/submissions.log
 ```
+
+## Documentation
+
+Additional documentation is available in the `docs/` folder:
+
+- **[Form Scaffolding Guide](docs/FORM_SCAFFOLDING_GUIDE.md)** - Complete guide for building forms with the scaffolding system
+- **[Google Sheets Integration](docs/GOOGLE_SHEETS_INTEGRATION.md)** - Setup and integration guide for Google Sheets
+- **[Environment Variables Guide](docs/ENV_GUIDE.md)** - Detailed explanation of all environment variables
+- **[Quick Start Guide](docs/QUICKSTART.md)** - Fast setup for development
+- **[Deployment Security](docs/DEPLOYMENT_SECURITY.md)** - Security best practices
 
 ## Support
 

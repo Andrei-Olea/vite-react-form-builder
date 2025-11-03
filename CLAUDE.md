@@ -24,9 +24,9 @@ This project includes a comprehensive form scaffolding system for building landi
 
 ### Quick Start for New Forms
 
-**See `FORM_SCAFFOLDING_GUIDE.md` for complete documentation.**
+**See `docs/FORM_SCAFFOLDING_GUIDE.md` for complete documentation.**
 
-**See `GOOGLE_SHEETS_INTEGRATION.md` for Google Sheets setup and integration.**
+**See `docs/GOOGLE_SHEETS_INTEGRATION.md` for Google Sheets setup and integration.**
 
 ### 🎯 Any Form → Google Sheets in 3 Lines of Code
 

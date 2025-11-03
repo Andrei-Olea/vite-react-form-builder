@@ -1,5 +1,4 @@
-// import { useSavingsForm } from '../hooks/useSavingsForm';
-import { useFormSubmission } from '../hooks/useFormSubmission';
+import { useSavingsForm } from '../hooks/useSavingsForm';
 import { formatCurrency, parseCurrency } from '../utils/calculations';
 import { CONFIG } from '../types/config.types';
 import { PaymentFrequency, PaymentMethod } from '../types/form.types';
@@ -27,7 +26,7 @@ export const SavingsForm = () => {
     handleFrequencyChange,
     handleSubmit,
     resetForm,
-  } = useFormSubmission();
+  } = useSavingsForm();
 
   if (CONFIG.formClosed) {
     return (

@@ -1,8 +1,8 @@
 {
-  "name": "codecol-vinculacion-ahorro-2025",
-  "version": "2.0.0",
+  "name": "vite-react-form-builder",
+  "version": "1.0.0",
   "type": "module",
-  "description": "Codecol - Savings Program Enrollment 2025",
+  "description": "A Vite + React form builder starter template",
   "packageManager": "pnpm@10.20.0",
   "scripts": {
     "dev": "vite",

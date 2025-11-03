@@ -197,10 +197,11 @@ Upload to Apache server and configure `.env` there.
 
 ## Need Help?
 
-- **DDEV Setup:** [DDEV_SETUP.md](DDEV_SETUP.md) ← Comprehensive guide
 - **Environment variables:** [ENV_GUIDE.md](ENV_GUIDE.md)
-- **Full documentation:** [README.md](README.md)
-- **Architecture:** [CLAUDE.md](CLAUDE.md)
+- **Full documentation:** [../README.md](../README.md)
+- **Architecture:** [../CLAUDE.md](../CLAUDE.md)
+- **Form scaffolding:** [FORM_SCAFFOLDING_GUIDE.md](FORM_SCAFFOLDING_GUIDE.md)
+- **Google Sheets setup:** [GOOGLE_SHEETS_INTEGRATION.md](GOOGLE_SHEETS_INTEGRATION.md)
 
 ---
 
