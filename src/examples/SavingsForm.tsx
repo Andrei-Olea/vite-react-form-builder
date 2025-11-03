@@ -2,7 +2,7 @@ import { useSavingsForm } from '../hooks/useSavingsForm';
 import { formatCurrency, parseCurrency } from '../utils/calculations';
 import { CONFIG } from '../types/config.types';
 import { PaymentFrequency, PaymentMethod } from '../types/form.types';
-import { FormInput, FormSelect, FormCheckbox } from '../components/form';
+import { FormInput, FormSelect, FormCheckbox, Loader } from '../components/form';
 
 /**
  * SavingsForm - Now built with the form scaffolding system!
@@ -52,6 +52,16 @@ export const SavingsForm = () => {
 
   return (
     <div className="savings-form-container">
+
+      {/* Loading state */}
+        {isSubmitting && (
+          <div style={{ padding: 'var(--spacing-2xl)', textAlign: 'center' }}>
+            <Loader message="Enviando tus datos..." />
+          </div>
+        )}
+
+        {isSubmitting ? null : (
+
       <form onSubmit={handleSubmit} className="savings-form" noValidate>
         {/* Data Policy Checkbox */}
         <FormCheckbox
@@ -116,7 +126,7 @@ export const SavingsForm = () => {
           />
         </div>
 
-        {/* Savings Program Information */}
+        
         <div className="form-section">
           <h2>Programa de Ahorro + Bono de Bienestar Navideño 2025</h2>
 
@@ -218,7 +228,7 @@ export const SavingsForm = () => {
             ]}
           />
         </div>
-
+        
         {/* Terms and Conditions */}
         <FormCheckbox
           name="terminos"
@@ -228,6 +238,8 @@ export const SavingsForm = () => {
           required
           label="Confirmo que conozco y acepto las condiciones del Programa Ahorro + Bono de Bienestar Navideño 2025"
         />
+
+
 
         {/* Submit Error */}
         {submitError && (
@@ -240,7 +252,9 @@ export const SavingsForm = () => {
         <button type="submit" className="button primary" disabled={isSubmitting}>
           {isSubmitting ? 'Enviando...' : 'Enviar'}
         </button>
+
       </form>
+        )}
     </div>
   );
 };
