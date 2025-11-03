@@ -100,6 +100,77 @@ const config: FormConfig = {
 />
 ```
 
+## Google Sheets Integration
+
+**✨ All forms built with this scaffolding system can automatically submit to Google Sheets!**
+
+We provide a generic `useFormSubmission` hook that makes it incredibly easy to send any form data to Google Sheets.
+
+### Quick Example:
+
+```tsx
+import { useFormSubmission } from '../hooks/useFormSubmission';
+
+const { submitForm, isSubmitting, submitSuccess, submitError } = useFormSubmission();
+
+const handleSubmit = async (e: FormEvent) => {
+  e.preventDefault();
+  await submitForm(formData); // That's it! Data goes to Google Sheets
+};
+```
+
+### Features:
+
+- ✅ **Works with ANY form structure** - No special field requirements
+- ✅ **3 lines of code** - Import hook, call `submitForm(formData)`, done!
+- ✅ **Auto-adds metadata** - IP address, timestamp (configurable)
+- ✅ **Dual submission** - Google Sheets (required) + Backend (optional)
+- ✅ **Full error handling** - Loading states, success, errors all managed
+
+### Complete Documentation:
+
+👉 **See `GOOGLE_SHEETS_INTEGRATION.md` for:**
+- Step-by-step setup guide
+- Google Apps Script configuration
+- Complete code examples
+- Hook options and customization
+- Troubleshooting tips
+
+### Two Patterns for Google Sheets Integration:
+
+**1. Direct Usage (Simple Forms):**
+```tsx
+// For simple forms without complex logic
+const { submitForm } = useFormSubmission();
+await submitForm(formData);
+```
+*See: `NewsletterFormExample.tsx`, `ContactFormExample.tsx`*
+
+**2. Custom Hook Pattern (Complex Forms):**
+```tsx
+// For forms with calculations, dynamic fields, etc.
+// Create a custom hook that USES useFormSubmission internally
+export const useMyForm = () => {
+  const { submitForm, ... } = useFormSubmission();
+  // Add your business logic here
+  return { ... };
+};
+```
+*See: `useSavingsForm.ts` - Perfect example of this pattern!*
+
+### Live Examples:
+
+All example forms submit to Google Sheets automatically:
+
+**FormBuilder Examples (Config-Driven):**
+- **`src/examples/RegistrationFormBuilderExample.tsx`** - ⭐ COMPLETE FormBuilder example with all field types and validation
+- `src/examples/ContactFormExample.tsx` - Simpler FormBuilder example
+
+**Component Composition Examples:**
+- **`src/components/SavingsForm.tsx`** - Production form with calculations and business logic
+- **`src/hooks/useSavingsForm.ts`** - Custom hook pattern (recommended for complex forms)
+- `src/examples/NewsletterFormExample.tsx` - Simple form with direct component usage
+
 ## Quick Start
 
 ### Step 1: Import Components

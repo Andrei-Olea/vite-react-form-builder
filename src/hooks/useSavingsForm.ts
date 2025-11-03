@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { SavingsFormData, FormErrors, PaymentFrequency } from '../types/form.types';
 import { validateForm, hasErrors } from '../utils/validation';
 import { calculateInstallments, calculateSemesterInstallment } from '../utils/calculations';
-import { getIpAddress, submitToGoogleSheets, submitToBackend } from '../utils/api';
+import { useFormSubmission } from './useFormSubmission';
 
 const initialFormData: Partial<SavingsFormData> = {
   nombre_completo: '',
@@ -21,19 +21,37 @@ const initialFormData: Partial<SavingsFormData> = {
   timestamp: '',
 };
 
+/**
+ * Custom hook for Savings Form
+ *
+ * This hook demonstrates how to use the generic useFormSubmission hook
+ * while adding custom business logic (calculations, validation, etc.)
+ *
+ * Pattern:
+ * 1. Use useFormSubmission for submission logic
+ * 2. Add your custom business logic on top
+ * 3. Form component stays clean and focused on UI
+ */
 export const useSavingsForm = () => {
   const [formData, setFormData] = useState<Partial<SavingsFormData>>(initialFormData);
   const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState<string>('');
 
-  // Fetch IP address on mount
+  // Use the generic submission hook
+  const {
+    submitForm,
+    isSubmitting,
+    submitSuccess,
+    submitError,
+    resetSubmission,
+    ipAddress,
+  } = useFormSubmission();
+
+  // Update formData with IP address when it's fetched
   useEffect(() => {
-    getIpAddress().then((ip) => {
-      setFormData((prev) => ({ ...prev, ipaddress: ip }));
-    });
-  }, []);
+    if (ipAddress) {
+      setFormData((prev) => ({ ...prev, ipaddress: ipAddress }));
+    }
+  }, [ipAddress]);
 
   // Calculate installments when relevant fields change
   useEffect(() => {
@@ -86,7 +104,6 @@ export const useSavingsForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitError('');
 
     // Validate form
     const validationErrors = validateForm(formData);
@@ -96,67 +113,21 @@ export const useSavingsForm = () => {
       return;
     }
 
-    setIsSubmitting(true);
+    // Submit using the generic submission hook
+    const success = await submitForm(formData as SavingsFormData);
 
-    try {
-      // Add timestamp
-      const submissionData: SavingsFormData = {
-        ...formData as SavingsFormData,
-        timestamp: new Date().toISOString(),
-      };
-
-      // Submit to both Google Sheets and backend
-      const [sheetsResponse, backendResponse] = await Promise.all([
-        submitToGoogleSheets(submissionData),
-        submitToBackend(submissionData),
-      ]);
-
-      // Success if Google Sheets succeeds (primary data store)
-      // Backend is optional (only used for email notifications and logging)
-      if (sheetsResponse.success) {
-        setSubmitSuccess(true);
-        setFormData(initialFormData);
-
-        // Log backend error if it failed, but don't block submission
-        if (!backendResponse.success) {
-          if (import.meta.env.DEV) {
-            console.warn(
-              '%c⚠️ Backend Submission Failed (Non-Critical)',
-              'background: #fef2f2; color: #dc2626; padding: 6px 10px; border-radius: 4px; font-weight: bold;'
-            );
-            console.warn('Error:', backendResponse.error);
-            console.warn('Data was successfully saved to Google Sheets.');
-            console.warn('Backend is only needed for email notifications and logging.');
-            console.warn('To enable backend: Start DDEV with "cd .. && ddev start"');
-          } else {
-            console.warn('Backend submission failed (non-critical):', backendResponse.error);
-          }
-        }
-      } else {
-        // Only fail if Google Sheets fails (primary requirement)
-        const errorMessages = [`Google Sheets: ${sheetsResponse.error || 'Unknown error'}`];
-
-        if (!backendResponse.success) {
-          errorMessages.push(`Backend: ${backendResponse.error || 'Unknown error'}`);
-        }
-
-        throw new Error(errorMessages.join(' | '));
-      }
-    } catch (error) {
-      setSubmitError(
-        error instanceof Error ? error.message : 'Error al enviar el formulario. Por favor intenta de nuevo.'
-      );
-    } finally {
-      setIsSubmitting(false);
+    if (success) {
+      // Reset form on success
+      setFormData(initialFormData);
+      setErrors({});
     }
   };
 
   const resetForm = useCallback(() => {
     setFormData(initialFormData);
     setErrors({});
-    setSubmitSuccess(false);
-    setSubmitError('');
-  }, []);
+    resetSubmission();
+  }, [resetSubmission]);
 
   return {
     formData,

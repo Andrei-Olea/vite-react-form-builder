@@ -7,10 +7,20 @@
 
 import { useState, FormEvent } from 'react';
 import { FormInput, FormSelect, FormCheckbox, validationRules } from '../components/form';
+import { useFormSubmission } from '../hooks/useFormSubmission';
+import { validateField } from '../utils/componentValidation';
 
+/**
+ * Newsletter Form Example - Now submits to Google Sheets!
+ *
+ * This example demonstrates:
+ * 1. Using form scaffolding components
+ * 2. Submitting to Google Sheets using the generic useFormSubmission hook
+ * 3. All data is automatically sent to the Google Sheets URL configured in .env
+ */
 export const NewsletterFormExample = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
+    nombre_completo: '',
     lastName: '',
     email: '',
     interests: '',
@@ -18,40 +28,99 @@ export const NewsletterFormExample = () => {
     terms: false,
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Use the generic submission hook - automatically handles Google Sheets + Backend
+  const { submitForm, isSubmitting, submitSuccess, submitError, resetSubmission } = useFormSubmission({
+    onSuccess: () => {
+      console.log('Newsletter signup successful!');
+    },
+    onError: (error) => {
+      console.error('Newsletter signup failed:', error);
+    },
+  });
 
   const handleChange = (name: string, value: any) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error for this field when user types
+    if (errors[name]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Validate all fields before submission
+    const validationErrors: Record<string, string> = {};
 
-      console.log('Newsletter signup:', formData);
-      setSubmitSuccess(true);
-    } catch (error) {
-      console.error('Error signing up:', error);
-    } finally {
-      setIsSubmitting(false);
+    // Validate nombre_completo
+    const nombreError = validateField(formData.nombre_completo, [
+      validationRules.required('First name is required'),
+      validationRules.minLength(2, 'Must be at least 2 characters'),
+    ]);
+    if (nombreError) validationErrors.nombre_completo = nombreError;
+
+    // Validate email
+    const emailError = validateField(formData.email, [
+      validationRules.required('Email is required'),
+      validationRules.email(),
+    ]);
+    if (emailError) validationErrors.email = emailError;
+
+    // Validate interests
+    const interestsError = validateField(formData.interests, [
+      validationRules.required('Please select an interest'),
+    ]);
+    if (interestsError) validationErrors.interests = interestsError;
+
+    // Validate frequency
+    const frequencyError = validateField(formData.frequency, [
+      validationRules.required('Please select a frequency'),
+    ]);
+    if (frequencyError) validationErrors.frequency = frequencyError;
+
+    // Validate terms checkbox
+    const termsError = validateField(formData.terms, [
+      validationRules.custom((value) => value === true, 'You must accept the terms'),
+    ]);
+    if (termsError) validationErrors.terms = termsError;
+
+    // If there are validation errors, show them and don't submit
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      console.warn('Form has validation errors:', validationErrors);
+      return;
+    }
+
+    // Clear any previous errors
+    setErrors({});
+
+    // Submit to Google Sheets (and backend if enabled)
+    const success = await submitForm(formData);
+
+    if (success) {
+      // Form data is now in Google Sheets!
+      console.log('Data saved to Google Sheets:', formData);
     }
   };
 
   const resetForm = () => {
     setFormData({
-      firstName: '',
+      nombre_completo: '',
       lastName: '',
       email: '',
       interests: '',
       frequency: '',
       terms: false,
     });
-    setSubmitSuccess(false);
+    setErrors({});
+    resetSubmission();
   };
 
   if (submitSuccess) {
@@ -79,11 +148,12 @@ export const NewsletterFormExample = () => {
           <h2>Your Information</h2>
 
           <FormInput
-            name="firstName"
-            label="First Name"
+            name="nombre_completo"
+            label="Nombre Completo"
             type="text"
-            value={formData.firstName}
-            onChange={(value) => handleChange('firstName', value)}
+            value={formData.nombre_completo}
+            onChange={(value) => handleChange('nombre_completo', value)}
+            error={errors.nombre_completo}
             required
             placeholder="John"
             validationRules={[
@@ -93,22 +163,12 @@ export const NewsletterFormExample = () => {
           />
 
           <FormInput
-            name="lastName"
-            label="Last Name"
-            type="text"
-            value={formData.lastName}
-            onChange={(value) => handleChange('lastName', value)}
-            required
-            placeholder="Doe"
-            validationRules={[validationRules.required('Last name is required')]}
-          />
-
-          <FormInput
             name="email"
             label="Email Address"
             type="email"
             value={formData.email}
             onChange={(value) => handleChange('email', value)}
+            error={errors.email}
             required
             placeholder="john@example.com"
             validationRules={[
@@ -127,6 +187,7 @@ export const NewsletterFormExample = () => {
             label="Primary Interest"
             value={formData.interests}
             onChange={(value) => handleChange('interests', value)}
+            error={errors.interests}
             required
             placeholder="Select your interest"
             options={[
@@ -143,6 +204,7 @@ export const NewsletterFormExample = () => {
             label="Email Frequency"
             value={formData.frequency}
             onChange={(value) => handleChange('frequency', value)}
+            error={errors.frequency}
             required
             placeholder="How often?"
             options={[
@@ -160,6 +222,7 @@ export const NewsletterFormExample = () => {
           name="terms"
           checked={formData.terms}
           onChange={(checked) => handleChange('terms', checked)}
+          error={errors.terms}
           required
           validationRules={[
             validationRules.custom((value) => value === true, 'You must accept the terms'),
@@ -170,6 +233,13 @@ export const NewsletterFormExample = () => {
             Privacy Policy
           </a>
         </FormCheckbox>
+
+        {/* Submit Error */}
+        {submitError && (
+          <div className="error-message">
+            <p>{submitError}</p>
+          </div>
+        )}
 
         {/* Submit Button */}
         <button type="submit" className="button primary" disabled={isSubmitting}>

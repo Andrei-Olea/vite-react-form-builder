@@ -7,7 +7,17 @@
 
 import { useState, FormEvent } from 'react';
 import { FormBuilder, FormConfig, validationRules } from '../components/form';
+import { useFormSubmission } from '../hooks/useFormSubmission';
+import { validateFormConfig, hasValidationErrors } from '../utils/formBuilderValidation';
 
+/**
+ * Contact Form Example - Now submits to Google Sheets!
+ *
+ * This example demonstrates:
+ * 1. Using FormBuilder (config-driven approach)
+ * 2. Submitting to Google Sheets using the generic useFormSubmission hook
+ * 3. All data is automatically sent to the Google Sheets URL configured in .env
+ */
 export const ContactFormExample = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -20,8 +30,16 @@ export const ContactFormExample = () => {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  // Use the generic submission hook - automatically handles Google Sheets + Backend
+  const { submitForm, isSubmitting, submitSuccess, submitError, resetSubmission } = useFormSubmission({
+    onSuccess: () => {
+      console.log('Contact form submitted successfully!');
+    },
+    onError: (error) => {
+      console.error('Contact form submission failed:', error);
+    },
+  });
 
   // Define form configuration
   const formConfig: FormConfig = {
@@ -148,19 +166,26 @@ export const ContactFormExample = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+
+    // Validate form data against config before submission
+    const validationErrors = validateFormConfig(formData, formConfig);
+
+    // If there are validation errors, show them and don't submit
+    if (hasValidationErrors(validationErrors)) {
+      setErrors(validationErrors);
+      console.warn('Form has validation errors:', validationErrors);
+      return;
+    }
+
+    // Clear any previous errors
     setErrors({});
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Submit to Google Sheets (and backend if enabled)
+    const success = await submitForm(formData);
 
-      console.log('Form submitted:', formData);
-      setSubmitSuccess(true);
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    } finally {
-      setIsSubmitting(false);
+    if (success) {
+      // Form data is now in Google Sheets!
+      console.log('Data saved to Google Sheets:', formData);
     }
   };
 
@@ -174,7 +199,7 @@ export const ContactFormExample = () => {
       contactPreference: '',
       newsletter: false,
     });
-    setSubmitSuccess(false);
+    resetSubmission();
     setErrors({});
   };
 
@@ -196,6 +221,13 @@ export const ContactFormExample = () => {
         <h1>Contact Us</h1>
         <p>We'd love to hear from you</p>
       </div>
+
+      {/* Submit Error */}
+      {submitError && (
+        <div className="error-message">
+          <p>{submitError}</p>
+        </div>
+      )}
 
       <FormBuilder
         config={formConfig}

@@ -20,11 +20,22 @@ Originally built as a savings program enrollment form for Codecol, now refactore
 
 ## Form Scaffolding System
 
-This project includes a comprehensive form scaffolding system for building landing pages with forms quickly.
+This project includes a comprehensive form scaffolding system for building landing pages with forms that **automatically submit to Google Sheets**.
 
 ### Quick Start for New Forms
 
 **See `FORM_SCAFFOLDING_GUIDE.md` for complete documentation.**
+
+**See `GOOGLE_SHEETS_INTEGRATION.md` for Google Sheets setup and integration.**
+
+### 🎯 Any Form → Google Sheets in 3 Lines of Code
+
+```tsx
+const { submitForm, isSubmitting } = useFormSubmission();
+const handleSubmit = async (e) => {
+  await submitForm(formData); // Done! Data is in Google Sheets
+};
+```
 
 ### Available Components
 
@@ -106,8 +117,13 @@ const config: FormConfig = {
 
 ### Examples
 
-- `src/examples/ContactFormExample.tsx` - Full contact form (config-driven)
-- `src/examples/NewsletterFormExample.tsx` - Newsletter signup (component composition)
+**FormBuilder (Config-Driven) - Easiest approach:**
+- **`src/examples/RegistrationFormBuilderExample.tsx`** - ⭐ Complete FormBuilder reference with all field types
+- `src/examples/ContactFormExample.tsx` - Simpler contact form with FormBuilder
+
+**Component Composition - Maximum flexibility:**
+- **`src/components/SavingsForm.tsx`** - Production form with calculations (submits to Google Sheets + Backend)
+- `src/examples/NewsletterFormExample.tsx` - Simple newsletter signup form
 
 ### Features
 

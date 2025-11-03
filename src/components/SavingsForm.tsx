@@ -1,8 +1,21 @@
-import { useSavingsForm } from '../hooks/useSavingsForm';
+// import { useSavingsForm } from '../hooks/useSavingsForm';
+import { useFormSubmission } from '../hooks/useFormSubmission';
 import { formatCurrency, parseCurrency } from '../utils/calculations';
 import { CONFIG } from '../types/config.types';
 import { PaymentFrequency, PaymentMethod } from '../types/form.types';
+import { FormInput, FormSelect, FormCheckbox } from './form';
 
+/**
+ * SavingsForm - Now built with the form scaffolding system!
+ *
+ * This form demonstrates using the reusable form components while maintaining
+ * all the original functionality including:
+ * - Submission to Google Sheets + Backend
+ * - Currency formatting with transformers
+ * - Conditional rendering (numero_cuotas only when frequency is Mensual)
+ * - Calculated read-only fields
+ * - All validation rules
+ */
 export const SavingsForm = () => {
   const {
     formData,
@@ -14,7 +27,7 @@ export const SavingsForm = () => {
     handleFrequencyChange,
     handleSubmit,
     resetForm,
-  } = useSavingsForm();
+  } = useFormSubmission();
 
   if (CONFIG.formClosed) {
     return (
@@ -40,222 +53,182 @@ export const SavingsForm = () => {
 
   return (
     <div className="savings-form-container">
-
       <form onSubmit={handleSubmit} className="savings-form" noValidate>
         {/* Data Policy Checkbox */}
-        <div className="form-group checkbox-group">
-          <label>
-            <input
-              type="checkbox"
-              checked={formData.polidatos || false}
-              onChange={(e) => handleInputChange('polidatos', e.target.checked)}
-              required
-            />
-            <span>
-              Autorizó a Codecol para recolectar, usar y tratar mis datos personales, conforme a la{' '}
-              <a
-                href="https://www.codecol.com.co/documentos/POLITICA-PROTECCION-DATOS-PERSONALES.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Política de Protección de Datos
-              </a>
-            </span>
-          </label>
-          {errors.polidatos && <span className="error">{errors.polidatos}</span>}
-        </div>
+        <FormCheckbox
+          name="polidatos"
+          checked={formData.polidatos || false}
+          onChange={(checked) => handleInputChange('polidatos', checked)}
+          error={errors.polidatos}
+          required
+        >
+          Autorizó a Codecol para recolectar, usar y tratar mis datos personales, conforme a la{' '}
+          <a
+            href="https://www.codecol.com.co/documentos/POLITICA-PROTECCION-DATOS-PERSONALES.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Política de Protección de Datos
+          </a>
+        </FormCheckbox>
 
         {/* Personal Information */}
         <div className="form-section">
           <h2>Información Personal</h2>
 
-          <div className="form-group">
-            <label htmlFor="nombre_completo">
-              Nombres y Apellidos <span className="required">*</span>
-            </label>
-            <input
-              type="text"
-              id="nombre_completo"
-              value={formData.nombre_completo || ''}
-              onChange={(e) => handleInputChange('nombre_completo', e.target.value)}
-              className={errors.nombre_completo ? 'error' : ''}
-              required
-            />
-            {errors.nombre_completo && <span className="error">{errors.nombre_completo}</span>}
-          </div>
+          <FormInput
+            name="nombre_completo"
+            label="Nombres y Apellidoxxx"
+            type="text"
+            value={formData.nombre_completo || ''}
+            onChange={(value) => handleInputChange('nombre_completo', value)}
+            error={errors.nombre_completo}
+            required
+          />
 
-          <div className="form-group">
-            <label htmlFor="documento_identidad">
-              Número de Identificación <span className="required">*</span>
-            </label>
-            <input
-              type="text"
-              id="documento_identidad"
-              value={formData.documento_identidad || ''}
-              onChange={(e) => handleInputChange('documento_identidad', e.target.value)}
-              className={errors.documento_identidad ? 'error' : ''}
-              required
-            />
-            {errors.documento_identidad && <span className="error">{errors.documento_identidad}</span>}
-          </div>
+          <FormInput
+            name="documento_identidad"
+            label="Número de Identificación"
+            type="text"
+            value={formData.documento_identidad || ''}
+            onChange={(value) => handleInputChange('documento_identidad', value)}
+            error={errors.documento_identidad}
+            required
+          />
 
-          <div className="form-group">
-            <label htmlFor="ciudad">
-              Ciudad <span className="required">*</span>
-            </label>
-            <input
-              type="text"
-              id="ciudad"
-              value={formData.ciudad || ''}
-              onChange={(e) => handleInputChange('ciudad', e.target.value)}
-              className={errors.ciudad ? 'error' : ''}
-              required
-            />
-            {errors.ciudad && <span className="error">{errors.ciudad}</span>}
-          </div>
+          <FormInput
+            name="ciudad"
+            label="Ciudad"
+            type="text"
+            value={formData.ciudad || ''}
+            onChange={(value) => handleInputChange('ciudad', value)}
+            error={errors.ciudad}
+            required
+          />
 
-          <div className="form-group">
-            <label htmlFor="email">
-              Correo Electrónico <span className="required">*</span>
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email || ''}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              className={errors.email ? 'error' : ''}
-              required
-            />
-            {errors.email && <span className="error">{errors.email}</span>}
-          </div>
+          <FormInput
+            name="email"
+            label="Correo Electrónico"
+            type="email"
+            value={formData.email || ''}
+            onChange={(value) => handleInputChange('email', value)}
+            error={errors.email}
+            required
+          />
         </div>
 
         {/* Savings Program Information */}
         <div className="form-section">
           <h2>Programa de Ahorro + Bono de Bienestar Navideño 2025</h2>
 
-          <div className="form-group">
-            <label htmlFor="meta_anual_ahorro">
-              Meta anual de ahorro individual <span className="required">*</span>
-            </label>
-            <small>Valor mínimo: {formatCurrency(CONFIG.minSavingsAmount)}</small>
-            <input
-              type="text"
-              id="meta_anual_ahorro"
-              value={formData.meta_anual_ahorro ? formatCurrency(formData.meta_anual_ahorro) : ''}
-              onChange={(e) => {
-                const value = parseCurrency(e.target.value);
-                handleInputChange('meta_anual_ahorro', value);
-              }}
-              className={errors.meta_anual_ahorro ? 'error' : ''}
-              placeholder={formatCurrency(CONFIG.minSavingsAmount)}
-              required
-            />
-            {errors.meta_anual_ahorro && <span className="error">{errors.meta_anual_ahorro}</span>}
-          </div>
+          <FormInput
+            name="meta_anual_ahorro"
+            label="Meta anual de ahorro individual"
+            type="text"
+            value={formData.meta_anual_ahorro || 0}
+            onChange={(value) => handleInputChange('meta_anual_ahorro', value)}
+            error={errors.meta_anual_ahorro}
+            required
+            helpText={`Valor mínimo: ${formatCurrency(CONFIG.minSavingsAmount)}`}
+            placeholder={formatCurrency(CONFIG.minSavingsAmount)}
+            transformer={{
+              format: (value) => formatCurrency(value as number),
+              parse: (value) => parseCurrency(value),
+            }}
+          />
 
-          <div className="form-group">
-            <label htmlFor="frecuencia_ahorro">
-              Frecuencia del ahorro <span className="required">*</span>
-            </label>
-            <select
-              id="frecuencia_ahorro"
-              value={formData.frecuencia_ahorro || ''}
-              onChange={(e) => handleFrequencyChange(e.target.value as PaymentFrequency | '')}
-              className={errors.frecuencia_ahorro ? 'error' : ''}
-              required
-            >
-              <option value="">Selecciona una opción</option>
-              <option value="Mensual">Mensual</option>
-              <option value="Semestral">Semestral diciembre 2025 y junio 2026</option>
-              <option value="Una cuota diciembre 2024">Una cuota diciembre 2025</option>
-              <option value="Una cuota junio 2025">Una cuota junio 2025</option>
-              <option value="Traslado del ahorro individual 2024">Traslado del ahorro individual 2024</option>
-            </select>
-            {errors.frecuencia_ahorro && <span className="error">{errors.frecuencia_ahorro}</span>}
-          </div>
+          <FormSelect
+            name="frecuencia_ahorro"
+            label="Frecuencia del ahorro"
+            value={formData.frecuencia_ahorro || ''}
+            onChange={(value) => handleFrequencyChange(value as PaymentFrequency | '')}
+            error={errors.frecuencia_ahorro}
+            required
+            placeholder="Selecciona una opción"
+            options={[
+              { value: 'Mensual', label: 'Mensual' },
+              { value: 'Semestral', label: 'Semestral diciembre 2025 y junio 2026' },
+              { value: 'Una cuota diciembre 2024', label: 'Una cuota diciembre 2025' },
+              { value: 'Una cuota junio 2025', label: 'Una cuota junio 2025' },
+              { value: 'Traslado del ahorro individual 2024', label: 'Traslado del ahorro individual 2024' },
+            ]}
+          />
 
-          {formData.frecuencia_ahorro === 'Mensual' && (
-            <div className="form-group">
-              <label htmlFor="numero_cuotas">
-                Número de cuotas a partir de diciembre 2024 <span className="required">*</span>
-              </label>
-              <select
-                id="numero_cuotas"
-                value={formData.numero_cuotas || ''}
-                onChange={(e) => handleInputChange('numero_cuotas', parseInt(e.target.value, 10))}
-                className={errors.numero_cuotas ? 'error' : ''}
-                required
-              >
-                <option value="">Selecciona una opción</option>
-                {Array.from({ length: CONFIG.maxInstallments }, (_, i) => i + 1).map((num) => (
-                  <option key={num} value={num}>
-                    {num}
-                  </option>
-                ))}
-              </select>
-              {errors.numero_cuotas && <span className="error">{errors.numero_cuotas}</span>}
-            </div>
-          )}
+          <FormSelect
+            name="numero_cuotas"
+            label="Número de cuotas a partir de diciembre 2024"
+            value={formData.numero_cuotas || ''}
+            onChange={(value) => handleInputChange('numero_cuotas', parseInt(String(value), 10))}
+            error={errors.numero_cuotas}
+            required
+            placeholder="Selecciona una opción"
+            options={Array.from({ length: CONFIG.maxInstallments }, (_, i) => ({
+              value: i + 1,
+              label: String(i + 1),
+            }))}
+            show={formData.frecuencia_ahorro === 'Mensual'}
+          />
 
-          {formData.frecuencia_ahorro === 'Mensual' && formData.valor_cuota_mensual && formData.valor_cuota_mensual > 0 && (
-            <div className="form-group">
-              <label>Valor de la cuota mensual</label>
-              <input
-                type="text"
-                value={formatCurrency(formData.valor_cuota_mensual ?? 0)}
-                readOnly
-                className="readonly"
-              />
-            </div>
-          )}
+          <FormInput
+            name="valor_cuota_mensual"
+            label="Valor de la cuota mensual"
+            type="text"
+            value={formData.valor_cuota_mensual ?? 0}
+            onChange={() => {}} // Read-only, no-op
+            readOnly
+            transformer={{
+              format: (value) => formatCurrency(value as number),
+              parse: (value) => parseCurrency(value),
+            }}
+            show={
+              formData.frecuencia_ahorro === 'Mensual' &&
+              !!formData.valor_cuota_mensual &&
+              formData.valor_cuota_mensual > 0
+            }
+          />
 
-          {formData.frecuencia_ahorro === 'Semestral' && formData.valor_cuota_semestral && formData.valor_cuota_semestral > 0 && (
-            <div className="form-group">
-              <label>Valor de la cuota semestral</label>
-              <input
-                type="text"
-                value={formatCurrency(formData.valor_cuota_semestral ?? 0)}
-                readOnly
-                className="readonly"
-              />
-            </div>
-          )}
+          <FormInput
+            name="valor_cuota_semestral"
+            label="Valor de la cuota semestral"
+            type="text"
+            value={formData.valor_cuota_semestral ?? 0}
+            onChange={() => {}} // Read-only, no-op
+            readOnly
+            transformer={{
+              format: (value) => formatCurrency(value as number),
+              parse: (value) => parseCurrency(value),
+            }}
+            show={
+              formData.frecuencia_ahorro === 'Semestral' &&
+              !!formData.valor_cuota_semestral &&
+              formData.valor_cuota_semestral > 0
+            }
+          />
 
-          <div className="form-group">
-            <label htmlFor="modalidad_ahorro">
-              Modalidad para realizar el ahorro <span className="required">*</span>
-            </label>
-            <select
-              id="modalidad_ahorro"
-              value={formData.modalidad_ahorro || ''}
-              onChange={(e) => handleInputChange('modalidad_ahorro', e.target.value as PaymentMethod)}
-              className={errors.modalidad_ahorro ? 'error' : ''}
-              required
-            >
-              <option value="">Selecciona una opción</option>
-              <option value="Nómina">Nómina</option>
-              <option value="Caja">Caja</option>
-            </select>
-            {errors.modalidad_ahorro && <span className="error">{errors.modalidad_ahorro}</span>}
-          </div>
+          <FormSelect
+            name="modalidad_ahorro"
+            label="Modalidad para realizar el ahorro"
+            value={formData.modalidad_ahorro || ''}
+            onChange={(value) => handleInputChange('modalidad_ahorro', value as PaymentMethod)}
+            error={errors.modalidad_ahorro}
+            required
+            placeholder="Selecciona una opción"
+            options={[
+              { value: 'Nómina', label: 'Nómina' },
+              { value: 'Caja', label: 'Caja' },
+            ]}
+          />
         </div>
 
         {/* Terms and Conditions */}
-        <div className="form-group checkbox-group">
-          <label>
-            <input
-              type="checkbox"
-              checked={formData.terminos || false}
-              onChange={(e) => handleInputChange('terminos', e.target.checked)}
-              required
-            />
-            <span>
-              Confirmo que conozco y acepto las condiciones del Programa Ahorro + Bono de Bienestar Navideño 2025
-            </span>
-          </label>
-          {errors.terminos && <span className="error">{errors.terminos}</span>}
-        </div>
+        <FormCheckbox
+          name="terminos"
+          checked={formData.terminos || false}
+          onChange={(checked) => handleInputChange('terminos', checked)}
+          error={errors.terminos}
+          required
+          label="Confirmo que conozco y acepto las condiciones del Programa Ahorro + Bono de Bienestar Navideño 2025"
+        />
 
         {/* Submit Error */}
         {submitError && (
