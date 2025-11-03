@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Modern web application for Codecol's savings program enrollment ("Vinculación al programa de ahorro + Bono de bienestar navideño 2025"). Built with React, TypeScript, Vite, and PHP backend.
+**Form Scaffolding System** for quickly building landing pages with forms. Includes reusable form components and supports both component composition and config-driven approaches.
+
+Originally built as a savings program enrollment form for Codecol, now refactored as a form builder starter kit. Built with React, TypeScript, Vite, and PHP backend.
 
 ## Technology Stack
 
@@ -15,6 +17,107 @@ Modern web application for Codecol's savings program enrollment ("Vinculación a
 - **Package Managers**: pnpm for Node, Composer for PHP
 - **Local Dev**: Parent DDEV instance at https://codecol.ddev.site (OrbStack)
 - **Deployment**: Apache web server
+
+## Form Scaffolding System
+
+This project includes a comprehensive form scaffolding system for building landing pages with forms quickly.
+
+### Quick Start for New Forms
+
+**See `FORM_SCAFFOLDING_GUIDE.md` for complete documentation.**
+
+### Available Components
+
+Located in `src/components/form/`:
+
+- **FormInput** - Text, email, password, number, tel, url inputs
+- **FormSelect** - Dropdown selects
+- **FormCheckbox** - Checkboxes with rich label support
+- **FormRadioGroup** - Radio button groups
+- **FormTextarea** - Multi-line text inputs
+- **FormBuilder** - Config-driven form renderer
+
+### Two Approaches
+
+1. **Component Composition** - Import and compose components in JSX (flexible, full control)
+2. **Config-Driven** - Define forms as configuration objects (fast, consistent)
+
+### Example: Component Composition
+
+```tsx
+import { FormInput, FormSelect, FormCheckbox, validationRules } from '@/components/form';
+
+<form onSubmit={handleSubmit}>
+  <FormInput
+    name="email"
+    label="Email"
+    type="email"
+    value={formData.email}
+    onChange={(value) => handleChange('email', value)}
+    required
+    validationRules={[
+      validationRules.required(),
+      validationRules.email()
+    ]}
+  />
+
+  <FormSelect
+    name="city"
+    label="City"
+    value={formData.city}
+    onChange={(value) => handleChange('city', value)}
+    options={[
+      { value: 'bogota', label: 'Bogotá' },
+      { value: 'medellin', label: 'Medellín' }
+    ]}
+  />
+
+  <button type="submit">Submit</button>
+</form>
+```
+
+### Example: Config-Driven
+
+```tsx
+import { FormBuilder, FormConfig } from '@/components/form';
+
+const config: FormConfig = {
+  sections: [
+    {
+      title: 'Contact Info',
+      fields: [
+        {
+          fieldType: 'input',
+          name: 'email',
+          label: 'Email',
+          type: 'email',
+          required: true,
+          value: '',
+          onChange: () => {}
+        }
+      ]
+    }
+  ],
+  submitButton: { label: 'Submit' }
+};
+
+<FormBuilder config={config} formData={formData} onChange={handleChange} onSubmit={handleSubmit} />
+```
+
+### Examples
+
+- `src/examples/ContactFormExample.tsx` - Full contact form (config-driven)
+- `src/examples/NewsletterFormExample.tsx` - Newsletter signup (component composition)
+
+### Features
+
+- **Component-level validation** - Each component validates its own data
+- **Custom error messages** - Configurable validation messages
+- **Value transformers** - Format display values and parse input (e.g., currency)
+- **Conditional rendering** - Show/hide fields based on conditions
+- **Custom styling** - Override default styles via className props
+- **Help text** - Add helpful hints below labels
+- **Character counters** - Automatic for textareas with maxLength
 
 ## Build & Development Commands
 
@@ -35,6 +138,13 @@ pnpm preview            # Preview production build locally
 **Two ways to access the app:**
 1. **Development (recommended):** `pnpm dev` → http://localhost:3000 (hot reload)
 2. **DDEV testing:** `pnpm build` → https://codecol.ddev.site/vinculacion-ahorro-bono-navideno-2025/
+
+**Development without DDEV:**
+- The app works in development mode even if DDEV is not running
+- Form submits to Google Sheets (primary data store) - always works
+- Backend PHP submission is optional (only for email notifications and logging)
+- You may see proxy errors in console (safe to ignore): `http proxy error: /api/submit.php`
+- To run with full backend support, start parent DDEV: `cd .. && ddev start`
 
 **How DDEV access works:**
 - `index.php` serves the built app from `dist/index.html`

@@ -111,18 +111,35 @@ export const useSavingsForm = () => {
         submitToBackend(submissionData),
       ]);
 
-      if (sheetsResponse.success && backendResponse.success) {
+      // Success if Google Sheets succeeds (primary data store)
+      // Backend is optional (only used for email notifications and logging)
+      if (sheetsResponse.success) {
         setSubmitSuccess(true);
         setFormData(initialFormData);
-      } else {
-        // Provide detailed error message
-        const errorMessages = [];
-        if (!sheetsResponse.success) {
-          errorMessages.push(`Google Sheets: ${sheetsResponse.error || 'Unknown error'}`);
+
+        // Log backend error if it failed, but don't block submission
+        if (!backendResponse.success) {
+          if (import.meta.env.DEV) {
+            console.warn(
+              '%c⚠️ Backend Submission Failed (Non-Critical)',
+              'background: #fef2f2; color: #dc2626; padding: 6px 10px; border-radius: 4px; font-weight: bold;'
+            );
+            console.warn('Error:', backendResponse.error);
+            console.warn('Data was successfully saved to Google Sheets.');
+            console.warn('Backend is only needed for email notifications and logging.');
+            console.warn('To enable backend: Start DDEV with "cd .. && ddev start"');
+          } else {
+            console.warn('Backend submission failed (non-critical):', backendResponse.error);
+          }
         }
+      } else {
+        // Only fail if Google Sheets fails (primary requirement)
+        const errorMessages = [`Google Sheets: ${sheetsResponse.error || 'Unknown error'}`];
+
         if (!backendResponse.success) {
           errorMessages.push(`Backend: ${backendResponse.error || 'Unknown error'}`);
         }
+
         throw new Error(errorMessages.join(' | '));
       }
     } catch (error) {

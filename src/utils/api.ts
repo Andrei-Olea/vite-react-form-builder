@@ -75,9 +75,15 @@ export const submitToBackend = async (
       data,
     };
   } catch (error) {
+    // Check if it's a connection error (backend not available)
+    const isConnectionError = error instanceof TypeError &&
+      (error.message.includes('fetch') || error.message.includes('Failed to fetch'));
+
     return {
       success: false,
-      message: 'Error al enviar el formulario',
+      message: isConnectionError
+        ? 'Backend no disponible (desarrollo sin DDEV)'
+        : 'Error al enviar el formulario',
       error: error instanceof Error ? error.message : 'Unknown error',
     };
   }

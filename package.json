@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "type": "module",
   "description": "Codecol - Savings Program Enrollment 2025",
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.20.0",
   "scripts": {
     "dev": "vite",
     "dev:smart": "bash dev.sh",

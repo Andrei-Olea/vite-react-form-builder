@@ -39,6 +39,8 @@ export default defineConfig({
     host: true, // Listen on all addresses (allows network access)
 
     // Proxy API requests to parent DDEV backend during development
+    // Note: If DDEV is not running, proxy errors will appear in console but app will still work
+    // The form submits to Google Sheets (primary) and backend (optional for emails/logging)
     proxy: {
       '/api': {
         target: 'https://codecol.ddev.site/vinculacion-ahorro-bono-navideno-2025',
