@@ -15,6 +15,11 @@
  * @example
  * // Validation utilities
  * import { validationRules } from '@/components/form';
+ *
+ * @example
+ * // Loading spinner
+ * import { Loader } from '@/components/form';
+ * {isSubmitting && <Loader message="Submitting..." />}
  */
 
 // Export all form components
@@ -24,6 +29,7 @@ export { FormCheckbox } from './FormCheckbox';
 export { FormRadioGroup } from './FormRadioGroup';
 export { FormTextarea } from './FormTextarea';
 export { FormBuilder } from './FormBuilder';
+export { Loader } from './Loader';
 
 // Export types
 export type {
@@ -41,6 +47,8 @@ export type {
   ValidationRule,
   ValueTransformer,
 } from '../../types/formComponents.types';
+
+export type { LoaderProps } from './Loader';
 
 // Export validation utilities
 export { validationRules, validateField } from '../../utils/componentValidation';

@@ -540,3 +540,36 @@ button[type="submit"] {
   width: fit-content;
   margin-inline: auto;
 }
+
+/* ============================================
+   Loader / Spinner
+   ============================================ */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 8px solid;
+  border-color: var(--color-primary) transparent;
+  animation: loader-spin 1s infinite;
+}
+
+@keyframes loader-spin {
+  to {
+    transform: rotate(0.5turn);
+  }
+}
+
+.loader-message {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  margin: 0;
+  text-align: center;
+}

@@ -14,7 +14,7 @@
  */
 
 import { useState, FormEvent } from 'react';
-import { FormBuilder, FormConfig, validationRules } from '../components/form';
+import { FormBuilder, FormConfig, validationRules, Loader } from '../components/form';
 import { useFormSubmission } from '../hooks/useFormSubmission';
 import { validateFormConfig, hasValidationErrors } from '../utils/formBuilderValidation';
 
@@ -394,15 +394,24 @@ export const RegistrationFormBuilderExample = () => {
         </div>
       )}
 
+      {/* Loading state */}
+      {isSubmitting && (
+        <div style={{ padding: 'var(--spacing-2xl)', textAlign: 'center' }}>
+          <Loader message="Creating your account..." />
+        </div>
+      )}
+
       {/* This is it! FormBuilder renders the entire form from config */}
-      <FormBuilder
-        config={formConfig}
-        formData={formData}
-        errors={errors}
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-        isSubmitting={isSubmitting}
-      />
+      {!isSubmitting && (
+        <FormBuilder
+          config={formConfig}
+          formData={formData}
+          errors={errors}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
+        />
+      )}
     </div>
   );
 };
