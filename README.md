@@ -1,6 +1,6 @@
-# Codecol - Programa de Ahorro 2025
+# Vite + React form builder starter
 
-Modern web application for Codecol's savings program enrollment, built with React, TypeScript, and Vite.
+Modern web application for building form very fast, built with React, TypeScript, and Vite.
 
 ## Tech Stack
 
@@ -75,7 +75,7 @@ Modern web application for Codecol's savings program enrollment, built with Reac
 ### Prerequisites
 
 - Node.js 18+ and pnpm
-- Parent DDEV instance running (https://codecol.ddev.site)
+- Parent DDEV instance running (https://yourapp.ddev.site)
 - Composer (for PHP dependencies)
 
 ### Setup
@@ -111,7 +111,7 @@ The parent directory already has DDEV configured. Make sure it's running:
 cd .. && ddev describe
 ```
 
-You should see the `codecol` project running at https://codecol.ddev.site
+You should see the `yourapp` project running at https://yourapp.ddev.site
 
 4. **Start development:**
 
@@ -125,11 +125,11 @@ Then open http://localhost:3000
 ```bash
 pnpm build  # Build the app first
 ```
-Then open https://codecol.ddev.site/vinculacion-ahorro-bono-navideno-2025/
+Then open https://yourapp.ddev.site/vinculacion-ahorro-bono-navideno-2025/
 
 > **Note:**
 > - For development, use `pnpm dev` (localhost:3000) for hot module replacement
-> - The parent DDEV instance at https://codecol.ddev.site handles PHP backend requests
+> - The parent DDEV instance at https://yourapp.ddev.site handles PHP backend requests
 > - To access via DDEV URL, you must build the app first with `pnpm build`
 
 ### Development Commands
@@ -212,7 +212,7 @@ This will:
 2. Run type checking
 3. Build the project
 4. Create a `deploy/` directory with all necessary files
-5. Create `codecol-savings-deploy.zip` for easy upload
+5. Create `yourapp-savings-deploy.zip` for easy upload
 
 ### Option 2: Manual build
 
@@ -227,7 +227,7 @@ The optimized files will be in the `dist/` directory.
 ### Quick Deployment
 
 1. **Upload files:**
-   - Extract `codecol-savings-deploy.zip` or upload the `deploy/` directory contents to your server
+   - Extract `yourapp-savings-deploy.zip` or upload the `deploy/` directory contents to your server
 
 2. **Configure:**
    ```bash
@@ -357,4 +357,4 @@ For issues or questions, contact the development team.
 
 ## License
 
-Proprietary - Codecol 2025
+Proprietary - yourapp 2025
