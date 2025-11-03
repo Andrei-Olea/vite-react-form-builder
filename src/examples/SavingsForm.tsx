@@ -2,7 +2,7 @@ import { useSavingsForm } from '../hooks/useSavingsForm';
 import { formatCurrency, parseCurrency } from '../utils/calculations';
 import { CONFIG } from '../types/config.types';
 import { PaymentFrequency, PaymentMethod } from '../types/form.types';
-import { FormInput, FormSelect, FormCheckbox } from './form';
+import { FormInput, FormSelect, FormCheckbox } from '../components/form';
 
 /**
  * SavingsForm - Now built with the form scaffolding system!
@@ -33,7 +33,7 @@ export const SavingsForm = () => {
       <div className="form-closed">
         <h1>¡La jornada de vinculación ha terminado!</h1>
         <p>Gracias por tu interés en el programa de ahorro + Bono de bienestar navideño 2025.</p>
-        <p>Codecol</p>
+        <p>The company</p>
       </div>
     );
   }
@@ -57,13 +57,13 @@ export const SavingsForm = () => {
         <FormCheckbox
           name="polidatos"
           checked={formData.polidatos || false}
-          onChange={(checked) => handleInputChange('polidatos', checked)}
+          onChange={(checked: boolean) => handleInputChange('polidatos', checked)}
           error={errors.polidatos}
           required
         >
-          Autorizó a Codecol para recolectar, usar y tratar mis datos personales, conforme a la{' '}
+          Autorizó a The company para recolectar, usar y tratar mis datos personales, conforme a la{' '}
           <a
-            href="https://www.codecol.com.co/documentos/POLITICA-PROTECCION-DATOS-PERSONALES.pdf"
+            href="#"/* Replace with actual link to data policy */
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -77,10 +77,10 @@ export const SavingsForm = () => {
 
           <FormInput
             name="nombre_completo"
-            label="Nombres y Apellidoxxx"
+            label="Nombres y Apellidos"
             type="text"
             value={formData.nombre_completo || ''}
-            onChange={(value) => handleInputChange('nombre_completo', value)}
+            onChange={(value: string | number) => handleInputChange('nombre_completo', value)}
             error={errors.nombre_completo}
             required
           />
@@ -90,7 +90,7 @@ export const SavingsForm = () => {
             label="Número de Identificación"
             type="text"
             value={formData.documento_identidad || ''}
-            onChange={(value) => handleInputChange('documento_identidad', value)}
+            onChange={(value: string | number) => handleInputChange('documento_identidad', value)}
             error={errors.documento_identidad}
             required
           />
@@ -100,7 +100,7 @@ export const SavingsForm = () => {
             label="Ciudad"
             type="text"
             value={formData.ciudad || ''}
-            onChange={(value) => handleInputChange('ciudad', value)}
+            onChange={(value: string | number) => handleInputChange('ciudad', value)}
             error={errors.ciudad}
             required
           />
@@ -110,7 +110,7 @@ export const SavingsForm = () => {
             label="Correo Electrónico"
             type="email"
             value={formData.email || ''}
-            onChange={(value) => handleInputChange('email', value)}
+            onChange={(value: string | number) => handleInputChange('email', value)}
             error={errors.email}
             required
           />
@@ -125,14 +125,14 @@ export const SavingsForm = () => {
             label="Meta anual de ahorro individual"
             type="text"
             value={formData.meta_anual_ahorro || 0}
-            onChange={(value) => handleInputChange('meta_anual_ahorro', value)}
+            onChange={(value: string | number) => handleInputChange('meta_anual_ahorro', value)}
             error={errors.meta_anual_ahorro}
             required
             helpText={`Valor mínimo: ${formatCurrency(CONFIG.minSavingsAmount)}`}
             placeholder={formatCurrency(CONFIG.minSavingsAmount)}
             transformer={{
-              format: (value) => formatCurrency(value as number),
-              parse: (value) => parseCurrency(value),
+              format: (value: string | number) => formatCurrency(value as number),
+              parse: (value: string) => parseCurrency(value),
             }}
           />
 
@@ -140,7 +140,7 @@ export const SavingsForm = () => {
             name="frecuencia_ahorro"
             label="Frecuencia del ahorro"
             value={formData.frecuencia_ahorro || ''}
-            onChange={(value) => handleFrequencyChange(value as PaymentFrequency | '')}
+            onChange={(value: string | number) => handleFrequencyChange(value as PaymentFrequency | '')}
             error={errors.frecuencia_ahorro}
             required
             placeholder="Selecciona una opción"
@@ -157,7 +157,7 @@ export const SavingsForm = () => {
             name="numero_cuotas"
             label="Número de cuotas a partir de diciembre 2024"
             value={formData.numero_cuotas || ''}
-            onChange={(value) => handleInputChange('numero_cuotas', parseInt(String(value), 10))}
+            onChange={(value: string | number) => handleInputChange('numero_cuotas', parseInt(String(value), 10))}
             error={errors.numero_cuotas}
             required
             placeholder="Selecciona una opción"
@@ -173,11 +173,11 @@ export const SavingsForm = () => {
             label="Valor de la cuota mensual"
             type="text"
             value={formData.valor_cuota_mensual ?? 0}
-            onChange={() => {}} // Read-only, no-op
+            onChange={(_value: string | number) => {}} // Read-only, no-op
             readOnly
             transformer={{
-              format: (value) => formatCurrency(value as number),
-              parse: (value) => parseCurrency(value),
+              format: (value: string | number) => formatCurrency(value as number),
+              parse: (value: string) => parseCurrency(value),
             }}
             show={
               formData.frecuencia_ahorro === 'Mensual' &&
@@ -191,11 +191,11 @@ export const SavingsForm = () => {
             label="Valor de la cuota semestral"
             type="text"
             value={formData.valor_cuota_semestral ?? 0}
-            onChange={() => {}} // Read-only, no-op
+            onChange={(_value: string | number) => {}} // Read-only, no-op
             readOnly
             transformer={{
-              format: (value) => formatCurrency(value as number),
-              parse: (value) => parseCurrency(value),
+              format: (value: string | number) => formatCurrency(value as number),
+              parse: (value: string) => parseCurrency(value),
             }}
             show={
               formData.frecuencia_ahorro === 'Semestral' &&
@@ -208,7 +208,7 @@ export const SavingsForm = () => {
             name="modalidad_ahorro"
             label="Modalidad para realizar el ahorro"
             value={formData.modalidad_ahorro || ''}
-            onChange={(value) => handleInputChange('modalidad_ahorro', value as PaymentMethod)}
+            onChange={(value: string | number) => handleInputChange('modalidad_ahorro', value as PaymentMethod)}
             error={errors.modalidad_ahorro}
             required
             placeholder="Selecciona una opción"
@@ -223,7 +223,7 @@ export const SavingsForm = () => {
         <FormCheckbox
           name="terminos"
           checked={formData.terminos || false}
-          onChange={(checked) => handleInputChange('terminos', checked)}
+          onChange={(checked: boolean) => handleInputChange('terminos', checked)}
           error={errors.terminos}
           required
           label="Confirmo que conozco y acepto las condiciones del Programa Ahorro + Bono de Bienestar Navideño 2025"
