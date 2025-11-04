@@ -47,7 +47,7 @@ Upload the contents of `deploy/` to your web root:
 scp -r deploy/* user@yourserver.com:/var/www/html/
 
 # Option C: Extract the zip
-unzip codecol-savings-deploy.zip -d /var/www/html/
+unzip yourapp-savings-deploy.zip -d /var/www/html/
 ```
 
 ### Step 2: Create .env OUTSIDE Web Root

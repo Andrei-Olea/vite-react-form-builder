@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Form Scaffolding System** for quickly building landing pages with forms. Includes reusable form components and supports both component composition and config-driven approaches.
 
-Originally built as a savings program enrollment form for Codecol, now refactored as a form builder starter kit. Built with React, TypeScript, Vite, and PHP backend.
+Originally built as a savings program enrollment form for YourApp, now refactored as a form builder starter kit. Built with React, TypeScript, Vite, and PHP backend.
 
 ## Technology Stack
 
@@ -15,7 +15,7 @@ Originally built as a savings program enrollment form for Codecol, now refactore
 - **Backend**: PHP 7.4+ with PHPMailer (runs on parent DDEV)
 - **Build Tool**: Vite 6
 - **Package Managers**: pnpm for Node, Composer for PHP
-- **Local Dev**: Parent DDEV instance at https://codecol.ddev.site (OrbStack)
+- **Local Dev**: Parent DDEV instance at https://yourapp.ddev.site (OrbStack)
 - **Deployment**: Apache web server
 
 ## Form Scaffolding System
@@ -141,7 +141,7 @@ const config: FormConfig = {
 ```bash
 pnpm dev                # Start Vite dev server (auto-finds available port from 3000+)
 pnpm run dev:smart      # Smart dev mode (checks DDEV status + port availability)
-pnpm build              # Build for production (TypeScript + Vite + create symlinks)
+pnpm build              # Build for production (TypeScript + Vite)
 pnpm type-check         # Run TypeScript type checking without building
 pnpm preview            # Preview production build locally
 ```
@@ -153,7 +153,7 @@ pnpm preview            # Preview production build locally
 
 **Two ways to access the app:**
 1. **Development (recommended):** `pnpm dev` → http://localhost:3000 (hot reload)
-2. **DDEV testing:** `pnpm build` → https://codecol.ddev.site/vinculacion-ahorro-bono-navideno-2025/
+2. **DDEV testing:** `pnpm build` → https://yourapp.ddev.site/vinculacion-ahorro-bono-navideno-2025/
 
 **Development without DDEV:**
 - The app works in development mode even if DDEV is not running
@@ -164,8 +164,10 @@ pnpm preview            # Preview production build locally
 
 **How DDEV access works:**
 - `index.php` serves the built app from `dist/index.html`
-- Symlinks (`assets`, `fonts`, `img`) point to `dist/` subdirectories
+- **Symlinks** at root (`assets`, `fonts`, `img`) point to `dist/` subdirectories
 - Symlinks are auto-created by `postbuild` script
+- **nginx** (DDEV local) follows symlinks to serve assets
+- **Apache** (production) can also follow symlinks OR use `.htaccess` rules
 - nginx prefers `index.php` over `index.html`
 
 ### Deployment
@@ -358,10 +360,22 @@ tail -f api/submissions.log
 ## Deployment Notes
 
 ### Production Build Process
-1. Run `./deploy.sh` to create deployment package
-2. Outputs to `deploy/` directory and `codecol-savings-deploy.zip`
-3. Includes only necessary files (dist, api, vendor, config.example.php)
-4. Optimized and minified assets
+1. Configure deployment in `.env`:
+   ```bash
+   DEPLOY_CREATE_ZIP=true          # Set to false to skip zip creation
+   DEPLOY_ZIP_NAME=yourapp-deploy  # Customize zip filename
+   DEPLOY_APP_URL=https://yourapp.ddev.site/your-path  # Your app URL
+   ```
+2. Run `./deploy.sh` to create deployment package
+3. Outputs to `deploy/` directory
+4. Creates zip file (if `DEPLOY_CREATE_ZIP=true`)
+5. Includes only necessary files (dist, api, vendor, .env.example)
+6. Optimized and minified assets
+
+**Deployment Configuration:**
+- Zip creation is controlled by `DEPLOY_CREATE_ZIP` in `.env`
+- Zip filename is controlled by `DEPLOY_ZIP_NAME` in `.env`
+- Set `DEPLOY_CREATE_ZIP=false` to only create the `deploy/` directory without zip
 
 ### Apache Requirements
 - mod_rewrite enabled

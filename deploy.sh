@@ -1,14 +1,14 @@
 #!/bin/bash
 
 ###############################################################################
-# Deployment Script for Codecol Savings Program
+# Deployment Script for YourApp Form Builder
 # This script builds the project and prepares it for Apache deployment
 ###############################################################################
 
 set -e  # Exit on error
 
 echo "================================================"
-echo "  Codecol Savings Program - Deployment Script"
+echo "  YourApp Form Builder - Deployment Script"
 echo "================================================"
 echo ""
 
@@ -27,6 +27,15 @@ if [ ! -f ".env" ]; then
     echo "  nano .env  # Edit with your settings"
     exit 1
 fi
+
+# Load environment variables from .env
+echo -e "${BLUE}Loading environment configuration...${NC}"
+export $(grep -v '^#' .env | grep -v '^$' | xargs)
+
+# Get deployment configuration from .env
+DEPLOY_CREATE_ZIP=${DEPLOY_CREATE_ZIP:-true}
+DEPLOY_ZIP_NAME=${DEPLOY_ZIP_NAME:-yourapp-deploy}
+DEPLOY_APP_URL=${DEPLOY_APP_URL:-https://yourapp.ddev.site}
 
 # Check if node_modules exists
 if [ ! -d "node_modules" ]; then
@@ -58,11 +67,8 @@ fi
 echo -e "${BLUE}Creating deployment directory...${NC}"
 mkdir -p "$DEPLOY_DIR"
 
-# Copy built files (excluding symlinks)
+# Copy built files
 echo -e "${BLUE}Copying built files to deployment directory...${NC}"
-# First, remove any symlinks from dist/ to prevent copy errors
-find dist/ -type l -delete 2>/dev/null || true
-# Now copy everything
 cp -r dist/* "$DEPLOY_DIR/"
 
 # Copy API directory
@@ -83,14 +89,23 @@ cp composer.lock "$DEPLOY_DIR/"
 echo -e "${BLUE}Copying environment template...${NC}"
 cp .env.example "$DEPLOY_DIR/"
 
-# Copy .htaccess for root if exists
+# Copy .htaccess files
+echo -e "${BLUE}Copying .htaccess files...${NC}"
+if [ -f ".htaccess" ]; then
+    cp .htaccess "$DEPLOY_DIR/"
+fi
 if [ -f "public/.htaccess" ]; then
     cp public/.htaccess "$DEPLOY_DIR/"
 fi
 
+# Copy index.php (entry point for DDEV/Apache)
+if [ -f "index.php" ]; then
+    cp index.php "$DEPLOY_DIR/"
+fi
+
 # Create README for deployment
 cat > "$DEPLOY_DIR/README.txt" << EOF
-Codecol Savings Program - Deployment Package
+YourApp Form Builder - Deployment Package
 =============================================
 
 IMPORTANT: Configuration Required!
@@ -148,20 +163,33 @@ It contains sensitive credentials and should be kept secure.
 For support, contact the development team.
 EOF
 
-# Create a zip file for easy upload
-echo -e "${BLUE}Creating deployment archive...${NC}"
-cd "$DEPLOY_DIR"
-zip -r ../codecol-savings-deploy.zip . > /dev/null
-cd ..
+# Create a zip file for easy upload (if enabled in .env)
+if [ "$DEPLOY_CREATE_ZIP" = "true" ]; then
+    echo -e "${BLUE}Creating deployment archive...${NC}"
+    cd "$DEPLOY_DIR"
+    zip -r ../${DEPLOY_ZIP_NAME}.zip . > /dev/null
+    cd ..
 
-echo ""
-echo -e "${GREEN}================================================${NC}"
-echo -e "${GREEN}  Deployment package created successfully!${NC}"
-echo -e "${GREEN}================================================${NC}"
-echo ""
-echo "Deployment files location:"
-echo "  Directory: ./deploy/"
-echo "  Archive:   ./codecol-savings-deploy.zip"
+    echo ""
+    echo -e "${GREEN}================================================${NC}"
+    echo -e "${GREEN}  Deployment package created successfully!${NC}"
+    echo -e "${GREEN}================================================${NC}"
+    echo ""
+    echo "Deployment files location:"
+    echo "  Directory: ./deploy/"
+    echo "  Archive:   ./${DEPLOY_ZIP_NAME}.zip"
+else
+    echo ""
+    echo -e "${GREEN}================================================${NC}"
+    echo -e "${GREEN}  Deployment directory created successfully!${NC}"
+    echo -e "${GREEN}================================================${NC}"
+    echo ""
+    echo "Deployment files location:"
+    echo "  Directory: ./deploy/"
+    echo ""
+    echo -e "${YELLOW}Note: Zip file creation is disabled in .env${NC}"
+    echo "Set DEPLOY_CREATE_ZIP=true in .env to enable zip creation"
+fi
 echo ""
 echo -e "${YELLOW}⚠️  IMPORTANT: Post-Deployment Steps${NC}"
 echo "  1. Upload files to your Apache server"

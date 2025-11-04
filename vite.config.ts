@@ -1,8 +1,12 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  // Load env file based on `mode` in the current working directory.
+  const env = loadEnv(mode, process.cwd(), '');
+
+  return {
   plugins: [react()],
 
   // Configure base path for Apache deployment
@@ -38,15 +42,18 @@ export default defineConfig({
     open: true,
     host: true, // Listen on all addresses (allows network access)
 
-    // Proxy API requests to parent DDEV backend during development
-    // Note: If DDEV is not running, proxy errors will appear in console but app will still work
+    // Proxy API requests to backend during development
+    // Note: If backend is not running, proxy errors will appear in console but app will still work
     // The form submits to Google Sheets (primary) and backend (optional for emails/logging)
+    // Target URL is configured in .env via VITE_DEV_PROXY_TARGET
     proxy: {
       '/api': {
-        target: 'https://codecol.ddev.site/vinculacion-ahorro-bono-navideno-2025',
+        target: env.VITE_DEV_PROXY_TARGET,
         changeOrigin: true,
-        secure: false, // DDEV uses self-signed certificates
+        secure: false, // Allow self-signed certificates (DDEV, local dev)
+        rewrite: (path) => path, // Keep the path as-is
       },
     },
   },
+  };
 });

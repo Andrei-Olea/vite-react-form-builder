@@ -219,7 +219,7 @@ if ($emailEnabled) {
         // Email settings from .env
         $mail->setFrom(
             $_ENV['EMAIL_FROM_ADDRESS'] ?? 'noreply@example.com',
-            $_ENV['EMAIL_FROM_NAME'] ?? 'Codecol'
+            $_ENV['EMAIL_FROM_NAME'] ?? 'YourApp'
         );
         $mail->addAddress($sanitizedData['email']);
 
@@ -295,7 +295,7 @@ function buildEmailBody($data) {
 
             <p>Pronto estaremos en contacto contigo para continuar con el proceso.</p>
             <p style='color: #6b7280;'>Gracias por confiar en nosotros.</p>
-            <p><strong>Codecol</strong></p>
+            <p><strong>YourApp</strong></p>
         </div>
     ";
 }
@@ -318,6 +318,6 @@ function buildTextEmailBody($data) {
         Pronto estaremos en contacto contigo.
 
         Gracias por confiar en nosotros.
-        Codecol
+        YourApp
     ";
 }

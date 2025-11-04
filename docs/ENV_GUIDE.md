@@ -83,8 +83,8 @@ These variables are read by the PHP backend using `vlucas/phpdotenv`.
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `EMAIL_ENABLED` | Enable/disable all email functionality | `true` or `false` |
-| `EMAIL_FROM_ADDRESS` | Sender email address | `noreply@codecol.com.co` |
-| `EMAIL_FROM_NAME` | Sender name | `Codecol` |
+| `EMAIL_FROM_ADDRESS` | Sender email address | `noreply@yourapp.com` |
+| `EMAIL_FROM_NAME` | Sender name | `YourApp` |
 | `EMAIL_BCC_ADDRESSES` | BCC recipients (comma-separated) | `admin@example.com,manager@example.com` |
 | `EMAIL_SUBJECT` | Email subject line | `Programa de Ahorro 2025` |
 
@@ -105,6 +105,19 @@ These variables are read by the PHP backend using `vlucas/phpdotenv`.
 | `APP_LOG_SUBMISSIONS` | Log form submissions to file | `true` or `false` |
 | `APP_LOG_FILE` | Log file name | `submissions.log` |
 | `APP_ALLOWED_ORIGINS` | CORS allowed origins | `*` or `https://domain.com` |
+
+#### Deployment Configuration
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DEPLOY_CREATE_ZIP` | Create zip file during deployment | `true` or `false` |
+| `DEPLOY_APP_URL` | Your application URL (used for DDEV proxy) | `https://yourapp.ddev.site/your-path` |
+| `DEPLOY_ZIP_NAME` | Deployment zip filename (without .zip) | `yourapp-deploy` |
+
+**Notes:**
+- `DEPLOY_CREATE_ZIP`: Set to `false` if you only want the `deploy/` directory without creating a zip file
+- `DEPLOY_APP_URL`: Used by Vite dev server to proxy API requests to your backend. Also referenced in documentation.
+- `DEPLOY_ZIP_NAME`: Customize the name of your deployment zip file
 
 ---
 
@@ -156,6 +169,47 @@ These variables are read by the PHP backend using `vlucas/phpdotenv`.
    pnpm run deploy
    ```
 
+### Customizing Deployment
+
+#### Disable Zip File Creation
+
+If you only need the `deploy/` directory without creating a zip file:
+
+```bash
+# Edit .env
+DEPLOY_CREATE_ZIP=false
+```
+
+Then run:
+```bash
+pnpm run deploy
+```
+
+This creates only the `deploy/` directory, which you can upload directly via FTP/SFTP.
+
+#### Custom Zip Filename
+
+```bash
+# Edit .env
+DEPLOY_ZIP_NAME=my-custom-app-v2
+```
+
+This will create `my-custom-app-v2.zip` instead of the default `yourapp-deploy.zip`.
+
+#### Change Application URL
+
+The `DEPLOY_APP_URL` is used by the Vite dev server to proxy API requests:
+
+```bash
+# Edit .env
+DEPLOY_APP_URL=https://production.example.com
+```
+
+Then restart your dev server:
+```bash
+pnpm dev
+```
+
 ---
 
 ## Security Best Practices
@@ -192,7 +246,7 @@ pnpm run deploy
 
 # This creates:
 # - deploy/ directory
-# - codecol-savings-deploy.zip
+# - yourapp-savings-deploy.zip
 #
 # The deployment package includes .env.example but NOT .env
 ```

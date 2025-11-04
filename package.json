@@ -8,7 +8,7 @@
     "dev": "vite",
     "dev:smart": "bash dev.sh",
     "build": "tsc && vite build && pnpm run postbuild",
-    "postbuild": "find dist/ -type l -delete 2>/dev/null || true && ln -sf dist/assets assets 2>/dev/null || true && ln -sf dist/fonts fonts 2>/dev/null || true && ln -sf dist/img img 2>/dev/null || true && echo '✓ Symlinks created for DDEV access'",
+    "postbuild": "ln -sf dist/assets assets 2>/dev/null || true && ln -sf dist/fonts fonts 2>/dev/null || true && ln -sf dist/img img 2>/dev/null || true && echo '✓ Build complete - symlinks created for DDEV (nginx) | .htaccess ready for Apache'",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "deploy": "bash deploy.sh"

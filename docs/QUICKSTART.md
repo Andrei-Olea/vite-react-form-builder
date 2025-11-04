@@ -11,7 +11,7 @@ cp .env.example .env
 nano .env  # Configure your settings
 
 # 3. Ensure parent DDEV is running
-cd .. && ddev describe  # Should show codecol project running
+cd .. && ddev describe  # Should show yourapp project running
 
 # 4. Done! Ready to develop
 ```
@@ -49,11 +49,11 @@ VITE v6.x ready in Xms
 pnpm build
 ```
 
-**Open:** https://codecol.ddev.site/vinculacion-ahorro-bono-navideno-2025/
+**Open:** https://yourapp.ddev.site/vinculacion-ahorro-bono-navideno-2025/
 
 > **Best for:** Testing the built app in a production-like environment
 
-> **Note:** Vite proxies `/api` requests to the parent DDEV at https://codecol.ddev.site
+> **Note:** Vite proxies `/api` requests to the parent DDEV at https://yourapp.ddev.site
 
 ---
 
@@ -81,7 +81,7 @@ pnpm build
 # Check parent DDEV status
 cd .. && ddev describe
 
-# Should show codecol project running
+# Should show yourapp project running
 # If not, start it from parent directory
 cd .. && ddev start
 ```
@@ -156,7 +156,7 @@ pnpm dev
 ┌─────────────────────────────────────────┐
 │  Parent DDEV (OrbStack)                 │
 │  - nginx + PHP-FPM                      │
-│  - URL: https://codecol.ddev.site       │
+│  - URL: https://yourapp.ddev.site       │
 │  - Handles API requests                 │
 │  - Sends emails (if enabled)            │
 └─────────────────────────────────────────┘
@@ -189,7 +189,7 @@ pnpm deploy
 
 Creates:
 - `deploy/` directory
-- `codecol-savings-deploy.zip`
+- `yourapp-savings-deploy.zip`
 
 Upload to Apache server and configure `.env` there.
 
