@@ -103,6 +103,7 @@ export const SavingsForm = () => {
             onChange={(value: string | number) => handleInputChange('documento_identidad', value)}
             error={errors.documento_identidad}
             required
+            show={formData.nombre_completo?.length!== 0}
           />
 
           <FormInput

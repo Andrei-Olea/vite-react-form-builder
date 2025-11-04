@@ -192,6 +192,7 @@ export const RegistrationFormBuilderExample = () => {
       {
         title: 'Preferences',
         description: 'Tell us more about yourself',
+        show: formData.username?.length !== 0,
         fields: [
           {
             fieldType: 'select',

@@ -148,7 +148,13 @@ export const FormBuilder = ({
             {section.title && <h2>{section.title}</h2>}
             {section.description && <p>{section.description}</p>}
 
-            {section.fields.map((field) => renderField(field))}
+            {section.fields.map((field) => {
+              // Skip field if show is false
+              if (field.show === false) {
+                return null;
+              }
+              return renderField(field);
+            })}
           </div>
         );
       })}
