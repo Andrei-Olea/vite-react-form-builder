@@ -46,6 +46,7 @@ Located in `src/components/form/`:
 - **FormCheckbox** - Checkboxes with rich label support
 - **FormRadioGroup** - Radio button groups
 - **FormTextarea** - Multi-line text inputs
+- **FormParagraph** - Static content (text, HTML, or React elements)
 - **FormBuilder** - Config-driven form renderer
 
 ### Two Approaches
@@ -98,6 +99,11 @@ const config: FormConfig = {
       title: 'Contact Info',
       fields: [
         {
+          fieldType: 'paragraph',
+          name: 'intro',
+          content: 'Please provide your contact information below.'
+        },
+        {
           fieldType: 'input',
           name: 'email',
           label: 'Email',
@@ -105,6 +111,11 @@ const config: FormConfig = {
           required: true,
           value: '',
           onChange: () => {}
+        },
+        {
+          fieldType: 'paragraph',
+          name: 'terms',
+          content: 'By submitting, you agree to our <a href="/terms">Terms of Service</a>.'
         }
       ]
     }
@@ -134,6 +145,47 @@ const config: FormConfig = {
 - **Custom styling** - Override default styles via className props
 - **Help text** - Add helpful hints below labels
 - **Character counters** - Automatic for textareas with maxLength
+- **Static content** - FormParagraph for instructions, disclaimers, HTML content
+
+### FormParagraph Usage
+
+FormParagraph is ideal for adding static content to forms:
+
+```tsx
+// Simple text
+{
+  fieldType: 'paragraph',
+  name: 'intro',
+  content: 'Please fill out all required fields.'
+}
+
+// HTML content (auto-detected)
+{
+  fieldType: 'paragraph',
+  name: 'terms',
+  content: 'By continuing, you agree to our <a href="/terms">Terms of Service</a>.'
+}
+
+// Conditional rendering
+{
+  fieldType: 'paragraph',
+  name: 'cdatInfo',
+  content: '<strong>Important:</strong> Your CDAT will be created with the selected term.',
+  show: formData.instruccion_ahorro === 'apertura_cdat'
+}
+
+// React elements
+{
+  fieldType: 'paragraph',
+  name: 'notice',
+  content: (
+    <>
+      <strong>Note:</strong> Data saved to{' '}
+      <a href="https://sheets.google.com">Google Sheets</a>
+    </>
+  )
+}
+```
 
 ## Build & Development Commands
 

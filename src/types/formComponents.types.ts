@@ -89,13 +89,22 @@ export interface FormTextareaProps extends BaseFormFieldProps {
   maxLength?: number;
 }
 
+// FormParagraph props
+export interface FormParagraphProps {
+  name: string;  // Unique identifier for React keys
+  content: React.ReactNode;  // Accepts strings, HTML, or React elements
+  className?: string;  // Optional custom styling
+  show?: boolean;  // Conditional rendering support
+}
+
 // Config-driven form types
 export type FormFieldConfig =
   | ({ fieldType: 'input' } & FormInputProps)
   | ({ fieldType: 'select' } & FormSelectProps)
   | ({ fieldType: 'checkbox' } & FormCheckboxProps)
   | ({ fieldType: 'radio' } & FormRadioGroupProps)
-  | ({ fieldType: 'textarea' } & FormTextareaProps);
+  | ({ fieldType: 'textarea' } & FormTextareaProps)
+  | ({ fieldType: 'paragraph' } & FormParagraphProps);
 
 export interface FormSectionConfig {
   title?: string;

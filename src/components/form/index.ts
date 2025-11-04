@@ -28,6 +28,7 @@ export { FormSelect } from './FormSelect';
 export { FormCheckbox } from './FormCheckbox';
 export { FormRadioGroup } from './FormRadioGroup';
 export { FormTextarea } from './FormTextarea';
+export { FormParagraph } from './FormParagraph';
 export { FormBuilder } from './FormBuilder';
 export { Loader } from './Loader';
 
@@ -38,6 +39,7 @@ export type {
   FormCheckboxProps,
   FormRadioGroupProps,
   FormTextareaProps,
+  FormParagraphProps,
   FormBuilderProps,
   FormConfig,
   FormSectionConfig,

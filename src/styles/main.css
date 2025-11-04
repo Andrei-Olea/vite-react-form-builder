@@ -226,6 +226,28 @@ a:hover {
   color: var(--color-error);
 }
 
+/* Form Paragraph - Static content for forms */
+.form-paragraph {
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.form-paragraph a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.form-paragraph a:hover {
+  color: var(--color-primary-dark);
+}
+
+.form-paragraph strong {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
 /* ============================================
    Form Inputs
    ============================================ */

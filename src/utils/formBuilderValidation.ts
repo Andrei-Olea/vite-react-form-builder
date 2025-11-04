@@ -41,6 +41,11 @@ export const validateFormConfig = (
         continue;
       }
 
+      // Skip paragraph fields (display-only, no validation needed)
+      if (field.fieldType === 'paragraph') {
+        continue;
+      }
+
       const fieldError = validateFormField(field, formData[field.name]);
       if (fieldError) {
         errors[field.name] = fieldError;
@@ -72,7 +77,8 @@ const validateFormField = (field: FormFieldConfig, value: any): string | undefin
   }
 
   // For required fields without explicit validation rules, check if empty
-  if (field.required) {
+  // Type-safe check for required property (not all field types have it)
+  if ('required' in field && field.required) {
     // For checkboxes
     if (field.fieldType === 'checkbox') {
       if (!value || value === false) {

@@ -217,6 +217,11 @@ export const RegistrationFormBuilderExample = () => {
             ],
           },
           {
+            fieldType: 'paragraph',
+            name: 'interestsInfo',
+            content: 'Let us know <strong>what topics interest you the most:</strong>',
+          },
+          {
             fieldType: 'select',
             name: 'interests',
             label: 'Primary Interest',

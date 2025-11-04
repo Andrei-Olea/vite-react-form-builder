@@ -4,6 +4,7 @@ import { FormSelect } from './FormSelect';
 import { FormCheckbox } from './FormCheckbox';
 import { FormRadioGroup } from './FormRadioGroup';
 import { FormTextarea } from './FormTextarea';
+import { FormParagraph } from './FormParagraph';
 
 /**
  * FormBuilder component - Renders forms from configuration objects
@@ -125,6 +126,16 @@ export const FormBuilder = ({
             error={errors[field.name]}
             value={formData[field.name] ?? ''}
             onChange={(value) => onChange(field.name, value)}
+          />
+        );
+      }
+
+      case 'paragraph': {
+        const { name: _unused, ...props } = fieldProps as any;
+        return (
+          <FormParagraph
+            key={field.name}
+            {...props}
           />
         );
       }
