@@ -16,11 +16,11 @@ if (file_exists($distIndex)) {
     // No build available - show development instructions
     ?>
     <!DOCTYPE html>
-    <html lang="es">
+    <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Codecol - Programa de Ahorro 2025 - Desarrollo</title>
+        <title>ViteJs + React Form Starter</title>
         <style>
             body {
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -45,32 +45,29 @@ if (file_exists($distIndex)) {
     </head>
     <body>
         <div class="card">
-            <h1>⚙️ Modo Desarrollo</h1>
+            <h1>⚙️ Development Mode</h1>
 
             <div class="warning">
-                <strong>⚠️ No se encontró la versión compilada</strong>
-                <p>El directorio <code>dist/</code> no existe o está vacío.</p>
+                <strong>⚠️ Built version not found</strong>
+                <p>The <code>dist/</code> directory does not exist or is empty.</p>
             </div>
 
             <div class="info">
-                <h2>Para desarrollo local:</h2>
+                <h2>For local development:</h2>
                 <ol>
-                    <li>Ejecuta: <code>pnpm dev</code></li>
-                    <li>Abre: <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
+                    <li>Run: <code>pnpm dev</code></li>
+                    <li>Open: <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
                 </ol>
             </div>
 
             <div class="info">
-                <h2>Para acceder vía DDEV:</h2>
+                <h2>To access via DDEV:</h2>
                 <ol>
-                    <li>Ejecuta: <code>pnpm build</code></li>
-                    <li>Recarga esta página</li>
+                    <li>Run: <code>pnpm build</code></li>
+                    <li>Reload this page</li>
                 </ol>
             </div>
 
-            <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
-
-            <p><small>📍 Ubicación: <code><?php echo __DIR__; ?></code></small></p>
         </div>
     </body>
     </html>
